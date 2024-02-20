@@ -1,0 +1,35 @@
+pipeline{
+    agent any
+    stages{
+        stage('checkout the git'){
+            steps{
+                git url:'https://github.com/vikulrepo/Addressbook2.git'
+            }
+        }
+        stage('compile the code'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('test the code'){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage('QA the code'){
+            steps{
+                sh 'mvn checkstyle:checkstyle'
+            }
+        }
+        stage('package the code'){
+            steps{
+                sh 'mvn clean package'
+            }
+        }
+        stage('deploy to tomcat'){
+            steps{
+                deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://54.242.163.197:8080/')], contextPath: 'addressbook_pipeline', war: '**/*.war'
+            }
+        }
+    }
+}
