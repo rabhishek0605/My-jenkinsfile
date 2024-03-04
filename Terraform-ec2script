@@ -54,7 +54,6 @@ resource "aws_security_group" "example" {
   }
 }
 
-# Network Interface Setup
 resource "aws_network_interface" "example" {
   subnet_id   = aws_subnet.example.id
   private_ips = ["10.0.1.10"]  # Update with desired IP address
@@ -66,15 +65,15 @@ resource "aws_network_interface" "example" {
 
 resource "aws_eip" "example" {
   vpc      = true
+  instance = test-server
   depends_on = [aws_internet_gateway.example]
 }
 
-# Ec2 instance setup
 resource "aws_instance" "test-Server" {
   ami              = "ami-07d9b9ddc6cd8dd30"
   instance_type    = "t2.micro"
   availability_zone = "us-east-1a"
-  key_name         = "New-KP"  # Make sure the key pair exists in your AWS account
+  key_name         = "New-KP"
   
   tags = {
     Name = "test-Server"
